@@ -4,20 +4,28 @@ require 'open-uri'
 require 'nokogiri'
 
 def bash_pl()
-  bash = Nokogiri::HTML(open("http://bash.org.pl/random"))
+  bash = Nokogiri::HTML(open("http://bash.org.pl/random"),'utf-8')
   bash = bash.css("div[class='quote post-content post-body']").text
+  print(bash.gsub("\n","").gsub("\t",""))
+end
 
-  bash = bash.gsub("\n","").gsub("\t","")
-  if bash.include? "\r"
-    bash = bash.split("\r")
-    bash.each do |line|
+def bash_org()
+  bash = Nokogiri::HTML(open("http://bash.org/?random"),'utf-8')
+  bash = bash.css("p[class='qt']").text
+  print(bash.gsub("\n","").gsub("\t",""))
+end
+
+def print(text)
+  if text.include? "\r"
+    text = text.split("\r")
+    text.each do |line|
       if !line.empty?
         puts line
       end
     end
   else
-    bash = bash.split("<")
-    bash.each do |line|
+    text = text.split("<")
+    text.each do |line|
       if !line.empty?
         puts "<#{line}"
       end
@@ -25,8 +33,14 @@ def bash_pl()
   end
 end
 
+def usage()
+  puts "Usage: ./bash-motd.rb {bash_pl|bash_org}"
+end
+
 arg = ARGV[0]
 
 option = case arg
   when "bash_pl" then bash_pl
+  when "bash_org" then bash_org
+  else usage
 end
