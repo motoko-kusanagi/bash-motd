@@ -11,8 +11,13 @@ end
 
 def bash_org()
   bash = Nokogiri::HTML(open("http://bash.org/?random"),'utf-8')
-  bash = bash.css("p[class='qt']").text
-  print(bash.gsub("\n","").gsub("\t",""))
+  bash = bash.css("p[class='qt']")
+
+  bash.each { |tag|
+    quote = tag.text
+    print(quote.gsub("\n","").gsub("\t",""))
+    puts
+  }
 end
 
 def print(text)
