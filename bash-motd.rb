@@ -9,15 +9,27 @@ def bash_pl()
   print(bash.gsub("\n","").gsub("\t",""))
 end
 
-def bash_org()
+def bash_org(count)
   bash = Nokogiri::HTML(open("http://bash.org/?random"),'utf-8')
   bash = bash.css("p[class='qt']")
 
+  i = -1
+  quote = []
+
   bash.each { |tag|
-    quote = tag.text
-    print(quote.gsub("\n","").gsub("\t",""))
+    quote[i+=1] = tag.text
+    # print(quote[i].gsub("\n","").gsub("\t",""))
     puts
   }
+  
+  if count == "all"
+    quote.each { |qt| 
+      print(qt.gsub("\n","").gsub("\t",""))
+      puts
+    }
+  else  
+    print(quote[rand(i)].to_s.gsub("\n","").gsub("\t",""))
+  end
 end
 
 def print(text)
@@ -46,6 +58,7 @@ arg = ARGV[0]
 
 option = case arg
   when "bash_pl" then bash_pl
-  when "bash_org" then bash_org
+  when "bash_org" then bash_org("all")
+  when "bash_org_one" then bash_org("one")
   else usage
 end
