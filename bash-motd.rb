@@ -51,14 +51,19 @@ def print(text)
 end
 
 def usage()
-  puts "Usage: ./bash-motd.rb {bash_pl|bash_org}"
+  puts "Usage: ./bash-motd.rb {bash_pl|bash_org one|bash_org all}"
 end
 
-arg = ARGV[0]
+v1 = ARGV[0]
+v2 = ARGV[1]
 
-option = case arg
+option = case v1
   when "bash_pl" then bash_pl
-  when "bash_org" then bash_org("all")
-  when "bash_org_one" then bash_org("one")
+  when "bash_org"
+    option = case v2
+      when "all" then bash_org("all")
+      when "one" then bash_org("one")
+      else bash_org("one")
+    end
   else usage
 end
